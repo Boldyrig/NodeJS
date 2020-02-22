@@ -5,6 +5,10 @@ class polyMath {
 
     }
 
+    newPolynomial(poly) {
+        return new Polynomial(poly);
+    }
+
     add(poly1, poly2) {
         let allMembers = poly1.members.concat(poly2.members); //соединить все члены в один массив
         let polyResult = new Polynomial(allMembers);
@@ -12,13 +16,10 @@ class polyMath {
         for(let i = 1; i < members.length; i++) {
             if(members[i - 1].power == members[i].power) {
                 members[i].koef += members[i - 1].koef;//сложить коэффициенты с одинаковыми степенями
-                if(members[i].koef == 0) {//если член стал с нулевым koef
-                    delete members[i];
-                }
+                // if(members[i].koef == 0) {//если член стал с нулевым koef
+                //     delete members[i];
+                // }
                 delete members[i - 1];//удалить лишний элемент
-            }
-            if(members[i].koef == 0) {//если попался член с нулевым koef
-                delete members[i];
             }
         }
         polyResult.members = members.filter(member => member != null);//исключить пустые элементы
