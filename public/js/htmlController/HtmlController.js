@@ -71,7 +71,7 @@ class HtmlController {
                     //onKeyUp: () => this.setValue(this),
                     id: 'koef',
                     type: 'text',
-                    placeholder: member.koef
+                    placeholder: 0
                 });
                 inputKoef.addEventListener('keyup', this.setValue);
                 let label = this.createHtmlTag('label', { class: 'label' });
@@ -83,7 +83,7 @@ class HtmlController {
                     //onKeyUp: () => this.setValue(this),
                     id: 'power',
                     type: 'text',
-                    placeholder: member.power
+                    placeholder: 0
                 });
                 inputPower.addEventListener('keyup', this.setValue);
                 let plus = this.createHtmlTag('label', { class: 'label'});;

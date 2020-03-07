@@ -1,51 +1,23 @@
-const server = new Server('http://localhost:3000');
-const htmlController = new HtmlController('container', 'buttons', 'result');
-//колбеки
-htmlController.appendAddMember(addMemberCB);
-htmlController.appendSetValue(setValueCB);
-htmlController.appendAddPoly(addPolyCB);
-htmlController.appendSubPoly(subPolyCB);
-htmlController.appendMultPoly(multPolyCB);
+window.onload = function () {
 
-window.onload = () => {
-    htmlController.printUI(polynomials);
+    const { MESSAGES } = CONFIG;
+
+    const socket = io('http://localhost:3000');
+    
+    function sendMessage() {
+        let name = document.getElementById('name').value;
+        let message = document.getElementById('message').value;
+        socket.emit(MESSAGES.NEW_MESSAGE, { name, message });
+    }
+
+    function newMessage(data) {
+        let chat = document.getElementById('chat');
+        let div = document.createElement('div');
+        div.innerHTML = `<b>${data.name}</b>: ${data.message}`;
+        chat.appendChild(div);
+    }
+
+    document.getElementById('newMessage').addEventListener('click', sendMessage);
+
+    socket.on(MESSAGES.NEW_MESSAGE, newMessage);
 };
-
-var polynomials = [
-    [
-        { koef: 0, power: 0 }
-    ], 
-    [
-        { koef: 0, power: 0 }
-    ]
-];
-
-async function addPolyCB() {
-    let result = await server.addPolynomials(polynomials);
-    htmlController.printResult(result);
-}
-
-async function subPolyCB() {
-    let result = await server.subPolynomials(polynomials);
-    console.log(result);
-    htmlController.printResult(result);
-}
-
-async function multPolyCB() {
-    let result = await server.multPolynomials(polynomials);
-    htmlController.printResult(result);
-}
-
-function addMemberCB(event) {
-    let polyId = event.path[0].getAttribute('polyId');
-    polynomials[polyId].push({ koef: 0, power: 0 });
-    htmlController.printUI(polynomials);
-}
-
-function setValueCB(event) {
-    let htmlElem = event.path[0];
-    let polyId = htmlElem.getAttribute('polyid');
-    let memberId = htmlElem.getAttribute('memberid');
-    let valueId = htmlElem.getAttribute('id');
-    polynomials[polyId][memberId][valueId] = parseInt(htmlElem.value);
-}

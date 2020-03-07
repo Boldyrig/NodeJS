@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src='./js/htmlController/HtmlController.js'></script>
-    <script src='./js/server/server.js'></script>
-    <script src='./js/index.js'></script>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src='js/vendor/socket.io.js'></script>
+    <script src='js/config.js'></script>
+    <script src='js/index.js'></script>
     <title>Document</title>
 </head>
 <body>
-    <div id='container'></div>
-    <br />
-    <div id='buttons'></div>
-    <br />
-    <div id='result'></div>
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="message" placeholder="Message">
+    <button id="newMessage">Послать</button>
+    <div id="chat"></div>
 </body>
 </html>
