@@ -6,19 +6,23 @@ const server = http.createServer(app);
 const io = require('socket.io').listen(server);
 
 const CONFIG = require('./config');
-const bodyParser = require('body-parser');//модуль для POST-запроса
+const bodyParser = require('body-parser'); // модуль для POST-запроса
 
-const { PORT, TRIGGERS, EVENTS, MESSAGES } = CONFIG; // конфига
+const { PORT, TRIGGERS, EVENTS, MESSAGES, DATABASE } = CONFIG; // конфига
 const Mediator = require('./application/modules/Mediator'); // медиатор
+const DB = require('./application/modules/db/DB'); // базонька с данными
 // классы модулей
-const PolyMath = require('./application/modules/polynomial/polyMath');//математический модуль для многочленов
+const PolyMath = require('./application/modules/polynomial/polyMath'); // математический модуль для многочленов
+const UserManager = require('./application/modules/userManager/UserManager');
 const ChatManager = require('./application/modules/chatManager/ChatManager');
 
 // подключение модулей
 const mediator = new Mediator({ TRIGGERS, EVENTS });
+const db = new DB(DATABASE);
 const polyMath = new PolyMath();
 
-new ChatManager({ mediator, io, MESSAGES });
+new UserManager({ mediator, io, MESSAGES, db });
+new ChatManager({ mediator, io, MESSAGES, db });
 
 io.on('connection', socket => {
 	console.log('connected ', socket.id);
@@ -32,4 +36,11 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 app.use('/', router);
 
+function deinitModules() {
+    db.destructor();
+}
+
 server.listen(PORT, () => console.log(`Port is ${PORT}`));
+
+//process.on('exit', deinitModules);
+//process.on('SIGINT', deinitModules); // CTRL + C
